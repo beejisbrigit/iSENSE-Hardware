@@ -175,7 +175,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 
 	public static JSONArray dataSet;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -190,6 +190,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Main Layout Button for Recording Data
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
+			@SuppressLint("NewApi")
 			@Override
 			public boolean onLongClick(View arg0) {
 				if ((!setupDone)) {
@@ -294,8 +295,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						startStop.setText(getResources().getString(
 								R.string.stopString));
 						startStop
-								.setBackgroundResource(R.drawable.button_rsense_stop);
-						startStop.setTextColor(Color.parseColor("#FFFFFF"));
+								.setBackgroundResource(R.drawable.button_rsense_green);
+						//startStop.setTextColor(Color.parseColor("#FFFFFF"));
+						
 						
 						new TimeElapsedTask().execute();
 						//TODO
@@ -1127,7 +1129,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 		} else {
-			w.make("No data to upload.", Waffle.IMAGE_CHECK);
+			w.make("No data to upload!", Waffle.IMAGE_X);
 		}
 	}
 	
@@ -1269,8 +1271,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
          if (dfm.enabledFields[Fields.LONGITUDE])
                  f.longitude = loc.getLongitude();
          if (dfm.enabledFields[Fields.HEADING_DEG])
-                 f.angle_deg = toThou.format(orientation[0]);
          if (dfm.enabledFields[Fields.HEADING_RAD])
+                 f.angle_deg = toThou.format(orientation[0]);
                  f.angle_rad = ""
                                  + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
          if (dfm.enabledFields[Fields.MAG_X])

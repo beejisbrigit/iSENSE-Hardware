@@ -93,6 +93,8 @@ public class Setup extends Activity implements OnClickListener {
 
 		mContext = this;
 
+		api = API.getInstance();
+		
 		w = new Waffle(mContext);
 
 		okay = (Button) findViewById(R.id.project_ok);
@@ -254,7 +256,7 @@ public class Setup extends Activity implements OnClickListener {
 		} else if (requestCode == NAME_FOR_NEW_PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				if (data.hasExtra("new_proj_name")) {
-
+					// TODO -- @Jeremy asynctaskify this
 					ArrayList<RProjectField> fields = getArrayOfFields();
 					int projectNum = api.createProject(
 							data.getStringExtra("new_proj_name"), fields);
@@ -265,9 +267,6 @@ public class Setup extends Activity implements OnClickListener {
 					finish();
 
 				}
-			} else {
-				setResult(RESULT_CANCELED);
-				finish();
 			}
 		} else if (requestCode == NEW_PROJ_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -355,28 +354,29 @@ public class Setup extends Activity implements OnClickListener {
 			fields.add(Lon);
 
 		} else if (APPNAME.equals("Canobie")) {
+			
 			RProjectField time = new RProjectField();
 			time.name = "Time";
 			time.type = RProjectField.TYPE_TIMESTAMP;
 			fields.add(time);
 
-			RProjectField aT, Vel, TD, Lat, Lon;
-
+			RProjectField aX, aY, aZ, aT;
+			aX = new RProjectField();
+			aY = new RProjectField();
+			aZ = new RProjectField();
 			aT = new RProjectField();
-			aT.name = "Accel-Magnitude";
-			aT.type = RProjectField.TYPE_NUMBER;
-			aT.unit = "m/s^2";
 
-			Vel = new RProjectField();
-			Vel.name = "Velocity";
-			Vel.type = RProjectField.TYPE_NUMBER;
-			Vel.unit = "m/s";
+			String b = "Accel-";
+			aX.name = b + "X";
+			aY.name = b + "Y";
+			aZ.name = b + "Z";
+			aT.name = b + "Total";
 
-			TD = new RProjectField();
-			TD.name = "Total Distance";
-			TD.type = RProjectField.TYPE_NUMBER;
-			TD.unit = "m";
-
+			aX.type = aY.type = aZ.type = aT.type = RProjectField.TYPE_NUMBER;
+			aX.unit = aY.unit = aZ.unit = aT.unit = "m/s^2";
+			
+			RProjectField Lat, Lon;
+			
 			Lat = new RProjectField();
 			Lat.name = "Latitude";
 			Lat.type = RProjectField.TYPE_LAT;
@@ -387,12 +387,35 @@ public class Setup extends Activity implements OnClickListener {
 			Lon.type = RProjectField.TYPE_LON;
 			Lon.unit = "deg";
 
+			fields.add(aX);
+			fields.add(aY);
+			fields.add(aZ);
 			fields.add(aT);
-			fields.add(Vel);
-			fields.add(TD);
 			fields.add(Lat);
 			fields.add(Lon);
 			
+		} else if (APPNAME.equals("Pictures")) {
+			
+			RProjectField time, Lat, Lon;
+			
+			time = new RProjectField();
+			time.name = "Time";
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			fields.add(time);
+			
+			Lat = new RProjectField();
+			Lat.name = "Latitude";
+			Lat.type = RProjectField.TYPE_LAT;
+			Lat.unit = "deg";
+
+			Lon = new RProjectField();
+			Lon.name = "Longitude";
+			Lon.type = RProjectField.TYPE_LON;
+			Lon.unit = "deg";
+			
+			fields.add(time);
+			fields.add(Lat);
+			fields.add(Lon);
 		}
 
 		return fields;
